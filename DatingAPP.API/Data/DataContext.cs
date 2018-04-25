@@ -11,5 +11,6 @@ namespace DatingAPP.API.Data
         // tell the DataContext about the models 
         // name of class - table
         public DbSet<Value> Values { get; set; }
+        public DbSet<User> Users { get; set; }
     }
 }

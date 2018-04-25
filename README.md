@@ -4,6 +4,10 @@ Dating app in ASP.Net Core 2 and Angular 5
 App currently in development
 
 
+## Project features
+- Cross platform functionality
+- User authentication
+
 ## Tech used
 - Microsoft ASP.Net Core 2
 - Microsoft Entity Framework 2
@@ -12,6 +16,3 @@ App currently in development
 - Underscore.js
 - MySQL
 - Postman
-
-### Project features
-- Cross platform functionality
