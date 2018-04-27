@@ -7,11 +7,6 @@ App currently in development
 ## Tech used
 - Microsoft ASP.Net Core 2
 - Microsoft Entity Framework 2
-- Angular 5
-- HTML CSS Bootsrap
-- Underscore.js
+- C#
 - MySQL
 - Postman
-
-### Project features
-- Cross platform functionality

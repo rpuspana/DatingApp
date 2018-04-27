@@ -15,7 +15,7 @@ namespace DatingApp.API.Controllers
         // make it available to the  rest of the class
         private readonly DataContext _context;
 
-        // inject out data context
+        // inject our data context
         public ValuesController(DataContext context)
         {
             this._context = context;

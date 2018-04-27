@@ -6,7 +6,8 @@ App currently in development
 
 ## Project features
 - Cross platform functionality
-- User authentication
+- User authentication with JWT token
+
 
 ## Tech used
 - Microsoft ASP.Net Core 2
