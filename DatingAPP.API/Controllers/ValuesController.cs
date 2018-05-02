@@ -3,13 +3,15 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using DatingAPP.API.Data;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace DatingApp.API.Controllers
 {
-    // aribute route
-    [Route("api/[controller]")]
+    // [Authorize] // authorize first to get access to methods
+    [AllowAnonymous] // access the values returned by the database
+    [Route("api/[controller]")] // aribute route
     public class ValuesController : Controller
     {
         // make it available to the  rest of the class

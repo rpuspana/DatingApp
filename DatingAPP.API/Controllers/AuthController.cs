@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using DatingAPP.API.Dtos;
 using DatingAPP.API.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 
 namespace DatingAPP.API.Data
@@ -14,11 +15,13 @@ namespace DatingAPP.API.Data
     public class AuthController : Controller
     {
         private readonly IAuthRepository _repo;
+        private readonly IConfiguration _config;
 
         // inhject the AuthRepository
-        public AuthController(IAuthRepository repo)
+        public AuthController(IAuthRepository repo, IConfiguration config)
         {
             _repo = repo;
+            _config = config;
         }
 
         // get info from the users
@@ -40,9 +43,9 @@ namespace DatingAPP.API.Data
             if (!ModelState.IsValid)
             {
                 // provide the errors to the client inside the model state
-                return BadRequest(ModelState); 
+                return BadRequest(ModelState);
             }
-          
+
             var userToCreate = new User
             {
                 Username = userForRegisterDto.Username
@@ -77,7 +80,8 @@ namespace DatingAPP.API.Data
 
             //super secret key =  key to sign the token encoded in bytes array
             // like 7A 61 2B 41 77 59 42 2F 51 4F 79 32 50 2F 63 2F 77 2D
-            var key = System.Text.Encoding.ASCII.GetBytes("super secret key");
+            // get the value of the password from appsettings.json-AppSettigns-Token
+            var key = System.Text.Encoding.ASCII.GetBytes(_config.GetSection("AppSettings:Token").Value);
 
             // token payload = describe token and what is going to be inside it
             var tokenDescriptor = new SecurityTokenDescriptor
@@ -90,8 +94,8 @@ namespace DatingAPP.API.Data
                 Expires = DateTime.Now.AddDays(1),
 
                 // token secret
-                SigningCredentials = 
-                    new SigningCredentials(new SymmetricSecurityKey(key), 
+                SigningCredentials =
+                    new SigningCredentials(new SymmetricSecurityKey(key),
                                             SecurityAlgorithms.HmacSha512Signature)
             };
 
@@ -108,7 +112,7 @@ namespace DatingAPP.API.Data
             var tokenString = tokenHandle.WriteToken(token);
 
             // pass token to the client
-            return Ok(new {tokenString});
+            return Ok(new { tokenString });
         }
     }
 }
