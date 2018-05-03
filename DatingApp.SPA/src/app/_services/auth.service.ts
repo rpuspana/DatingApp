@@ -13,10 +13,6 @@ export class AuthService {
 
     // calls the login method in the API
     login(model: any) {
-        const headers = new Headers({'Content-type': 'application/json'});
-
-        // headers property is the headers const above
-        const options = new RequestOptions({headers: headers});
 
         // issue a request
         // model = body of request = username and password from the user
@@ -25,7 +21,7 @@ export class AuthService {
         // map()
         //  - RXJS function
         //  - is used for transforming the servers's response into something else
-        return this.http.post(this.baseUrl + 'login', model, options).map(
+        return this.http.post(this.baseUrl + 'login', model, this.requestOptinos()).map(
             (response: Response) => {
                 const user = response.json();
                 if (user) {
@@ -33,5 +29,16 @@ export class AuthService {
                     this.userToken = user.tokenString;
                 }
             });
+    }
+
+    register(model: any) {
+        return this.http.post(this.baseUrl + 'register', model, this.requestOptinos());
+    }
+
+    private requestOptinos() {
+        const headers = new Headers({'Content-type': 'application/json'});
+
+        // headers property is the headers const above
+        return new RequestOptions({headers: headers});
     }
 }
