@@ -74,9 +74,6 @@ namespace DatingApp.API
             }
             else
             {
-                // global exception handler
-                // app.UseExceptionHandler();
-
                 app.UseExceptionHandler(builder => {
                     builder.Run(async context => {
                         
