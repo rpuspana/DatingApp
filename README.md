@@ -16,4 +16,4 @@ App currently in development
 - Angular 5
 - HTML CSS BootsrapJS
 - MySQL
-- AlertifyJS (for styling handled errors)
+- AlertifyJS (for styling handled errors) http://alertifyjs.com
