@@ -1,6 +1,9 @@
+import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
+import 'rxjs/add/observable/throw';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
-import 'rxjs/add/operator/map';
+import {Observable} from 'rxjs/Observable';
 
 
 @Injectable()
@@ -28,11 +31,12 @@ export class AuthService {
                     localStorage.setItem('token', user.tokenString);
                     this.userToken = user.tokenString;
                 }
-            });
+            }).catch(this.handleError);
     }
 
     register(model: any) {
-        return this.http.post(this.baseUrl + 'register', model, this.requestOptinos());
+        return this.http.post(this.baseUrl + 'register', model, this.requestOptinos())
+                .catch(this.handleError);
     }
 
     private requestOptinos() {
@@ -40,5 +44,36 @@ export class AuthService {
 
         // headers property is the headers const above
         return new RequestOptions({headers: headers});
+    }
+
+    // handle server errors(status code 500) and client errors(status code 400)
+    private handleError(error: any) {
+        // message returned by the server
+        const applicationError = error.headers.get('Application-Error');
+
+        // server error
+        if (applicationError) {
+            return Observable.throw(applicationError);
+        }
+
+        // target the ModelState errors
+        // extract the errors from the body of the request
+        const serverError = error.json();
+
+        let modelStateErrors = '';
+
+        if (serverError) {
+            // loop through the keys in the response's body
+            for (const key in serverError) {
+                if (serverError[key]) {
+                    modelStateErrors += serverError[key] + '\n';
+                }
+            }
+        }
+
+        return Observable.throw(
+            // if there are errors in the body, return them, or return 'Server error'
+            modelStateErrors || 'Server error.'
+        );
     }
 }

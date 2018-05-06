@@ -19,11 +19,13 @@ export class RegisterComponent implements OnInit {
   ngOnInit() {
   }
 
-  // log out to the console if there's an error
   register() {
-    this.authService.register(this.model).subscribe(() => {
+    this.authService.register(this.model).subscribe( () => {
+
       console.log('registration successfull');
     }, error => {
+        // return the error from the Observable
+        // if there's an error in the response
         console.log(error);
     });
   }

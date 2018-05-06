@@ -29,8 +29,11 @@ namespace DatingAPP.API.Data
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] UserForRegisterDto userForRegisterDto)
         {
-            // convert our username in a lowercase string and store it in a db
-            userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+           if (!string.IsNullOrEmpty(userForRegisterDto.Username))
+           {
+               // convert our username in a lowercase string and store it in a db
+               userForRegisterDto.Username = userForRegisterDto.Username.ToLower();
+           }
 
             // if the username already exists in the database
             if (await _repo.UserExists(userForRegisterDto.Username))
@@ -63,9 +66,11 @@ namespace DatingAPP.API.Data
         [HttpPost("login")] // add another word to the URL aka api/auth/login
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
+            throw new Exception("Computer says no.");
+
             // login with username and password
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(),
-                                                 userForLoginDto.Password);
+                                                userForLoginDto.Password);
 
             // check if it's a user in the response
             if (userFromRepo == null)
@@ -113,6 +118,7 @@ namespace DatingAPP.API.Data
 
             // pass token to the client
             return Ok(new { tokenString });
+            
         }
     }
 }
