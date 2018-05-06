@@ -71,37 +71,11 @@ namespace DatingApp.API
         {
             if (env.IsDevelopment())
             {
-<<<<<<< HEAD
-                    // handle server exceptions globally
-=======
                 // handle exceptions globally
->>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
                 app.UseDeveloperExceptionPage();
             }
             else
             {
-<<<<<<< HEAD
-                // handle server exception when you are in a non-developer monde(Eg. Production)
-                
-                // global exception handler
-                app.UseExceptionHandler(builder => {
-                    builder.Run(async context => {
-
-                        // access to the http context
-                        
-                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
-
-                        // the server error
-                        // pass error in the exception handler
-                        var error = context.Features.Get<IExceptionHandlerFeature>();
-
-                        if (error != null)
-                        {
-                            // Write error message in the response's header
-                            context.Response.AddApplicationError(error.Error.Message);
-
-                            // write error to response's body
-=======
                 app.UseExceptionHandler(builder => {
                     builder.Run(async context => {
                         
@@ -118,7 +92,6 @@ namespace DatingApp.API
                             context.Response.AddApplicationError(error.Error.Message);
 
                             // write error message in the response
->>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
                             await context.Response.WriteAsync(error.Error.Message);
                         }
                     });
