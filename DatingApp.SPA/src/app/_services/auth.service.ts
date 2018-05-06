@@ -3,12 +3,7 @@ import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
-<<<<<<< HEAD
 import {Observable} from 'rxjs/Observable';
-=======
-import 'rxjs/add/operator/map';
-import { Observable } from 'rxjs/Observable';
->>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
 
 
 @Injectable()
@@ -40,12 +35,8 @@ export class AuthService {
     }
 
     register(model: any) {
-<<<<<<< HEAD
-        return this.http.post(this.baseUrl + 'register', model, this.requestOptinos())
+        return this.http.post(this.baseUrl + 'register', model, this.requestOptions())
                 .catch(this.handleError);
-=======
-        return this.http.post(this.baseUrl + 'register', model, this.requestOptions());
->>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
     }
 
     private requestOptions() {
@@ -55,7 +46,6 @@ export class AuthService {
         return new RequestOptions({headers: headers});
     }
 
-<<<<<<< HEAD
     // handle server errors(status code 500) and client errors(status code 400)
     private handleError(error: any) {
         // message returned by the server
@@ -85,20 +75,5 @@ export class AuthService {
             // if there are errors in the body, return them, or return 'Server error'
             modelStateErrors || 'Server error.'
         );
-=======
-    // error handling
-    private handleError(error: any) {
-
-        // get the error from the responses's header
-        const applicatinError = error.Headers.get('Application-Error');
-
-        if (applicatinError) {
-            return Observable.throw(applicatinError);
-        }
-
-        // handle model state errors
-        // loop through the error messages in the response's body
-        // const serverError
->>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
     }
 }
