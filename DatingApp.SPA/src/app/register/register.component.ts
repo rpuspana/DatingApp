@@ -20,9 +20,14 @@ export class RegisterComponent implements OnInit {
   }
 
   register() {
+<<<<<<< HEAD
     this.authService.register(this.model).subscribe( () => {
 
       console.log('registration successfull');
+=======
+    this.authService.register(this.model).subscribe(() => {
+      console.log('registration successful');
+>>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
     }, error => {
         // return the error from the Observable
         // if there's an error in the response

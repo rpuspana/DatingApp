@@ -17,6 +17,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+using DatingAPP.API.Helpers;
 
 namespace DatingApp.API
 {
@@ -70,11 +71,16 @@ namespace DatingApp.API
         {
             if (env.IsDevelopment())
             {
+<<<<<<< HEAD
                     // handle server exceptions globally
+=======
+                // handle exceptions globally
+>>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
                 app.UseDeveloperExceptionPage();
             }
             else
             {
+<<<<<<< HEAD
                 // handle server exception when you are in a non-developer monde(Eg. Production)
                 
                 // global exception handler
@@ -95,6 +101,24 @@ namespace DatingApp.API
                             context.Response.AddApplicationError(error.Error.Message);
 
                             // write error to response's body
+=======
+                app.UseExceptionHandler(builder => {
+                    builder.Run(async context => {
+                        
+                        // I have access to the http context
+
+                        context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+                        // pass the error to the exception handlers and get it
+                        var error = context.Features.Get<IExceptionHandlerFeature>();
+
+                        if(error != null)
+                        {
+                            // write the error message in the response's header
+                            context.Response.AddApplicationError(error.Error.Message);
+
+                            // write error message in the response
+>>>>>>> e2551738ac96db5fcaa57cce857fad9d27900676
                             await context.Response.WriteAsync(error.Error.Message);
                         }
                     });
