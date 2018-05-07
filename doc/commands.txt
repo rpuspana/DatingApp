@@ -28,6 +28,23 @@ $ dotnet restore
 # start dotnet watch - sa fii in root folder al proiectului
 $ dotnet watch run  
 
+
+# ADD A JS FRAMEWORK AT THE ANGULAR PROJECT LEVEL
+1. terminate the kestrel webserver
+2. terminate angular server
+3. add the framework through NPM
+4. open up angular-cli.json file
+5. add the styles of the framework in "app"-"styles"
+6. add teh javascript files in "app"-"scripts"
+
+
+# USE A JS FRAMEWORK AT THE ANGULAR PROJECT LEVEL
+1. create a service - EG alertify
+2. create you methods and inside them use the js framework's functions
+3. add the service to the Angular app.module.ts
+3.1 add your service's name to NgModule - providers array
+
+
 === START THE APP WITH IT'S TWO PROJECTS ===
 1. API project - $ dotnet watch run
 2. Angular project - $ ng serve --open

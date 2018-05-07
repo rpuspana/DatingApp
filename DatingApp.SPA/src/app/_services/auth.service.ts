@@ -4,12 +4,15 @@ import 'rxjs/add/observable/throw';
 import { Injectable } from '@angular/core';
 import { Http, RequestOptions, Headers, Response } from '@angular/http';
 import {Observable} from 'rxjs/Observable';
+import { tokenNotExpired, JwtHelper } from 'angular2-jwt';
 
 
 @Injectable()
 export class AuthService {
     baseUrl = 'http://localhost:5000/api/auth/';
     userToken: any;
+    decodedToken: any; // when the page loads this gets set to undefined
+    jwtHelper: JwtHelper = new JwtHelper();
 
     // inject the http service from Angular
     constructor(private http: Http) { }
@@ -27,8 +30,14 @@ export class AuthService {
         return this.http.post(this.baseUrl + 'login', model, this.requestOptions()).map(
             (response: Response) => {
                 const user = response.json();
+                console.log(user);
+
                 if (user) {
                     localStorage.setItem('token', user.tokenString);
+
+                    this.decodedToken = this.jwtHelper.decodeToken(user.tokenString);
+                    console.log(this.decodedToken);
+
                     this.userToken = user.tokenString;
                 }
             }).catch(this.handleError);
@@ -37,6 +46,14 @@ export class AuthService {
     register(model: any) {
         return this.http.post(this.baseUrl + 'register', model, this.requestOptions())
                 .catch(this.handleError);
+    }
+
+    //  a JWT exists in local storage,
+    //  and if it does, whether it has expired or not.
+    loggedIn() {
+        // tokenNotExpired(tokenName) can be used to check whether a JWT exists in local storage,
+        //  and if it does, whether it has expired or not.
+        return tokenNotExpired('token');
     }
 
     private requestOptions() {

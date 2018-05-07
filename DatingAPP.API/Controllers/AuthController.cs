@@ -66,8 +66,6 @@ namespace DatingAPP.API.Data
         [HttpPost("login")] // add another word to the URL aka api/auth/login
         public async Task<IActionResult> Login([FromBody] UserForLoginDto userForLoginDto)
         {
-            throw new Exception("Computer says no.");
-
             // login with username and password
             var userFromRepo = await _repo.Login(userForLoginDto.Username.ToLower(),
                                                 userForLoginDto.Password);
@@ -118,7 +116,6 @@ namespace DatingAPP.API.Data
 
             // pass token to the client
             return Ok(new { tokenString });
-            
         }
     }
 }

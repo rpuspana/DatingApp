@@ -13,7 +13,13 @@ App currently in development
 ## Tech used
 - Microsoft ASP.Net Core 2
 - Microsoft Entity Framework 2
+
 - Angular 5
 - HTML CSS BootsrapJS
-- MySQL
+
 - AlertifyJS (for styling handled errors) http://alertifyjs.com
+- angular-jwt (library for managing JWTs) https://github.com/auth0/angular2-jwt
+- ngx-bootstrap (integrate Bootstrap 3 - which I will use, or Bootstrap 4 components with Angular) https://valor-software.com/ngx-bootstrap/#/getting-started
+
+- MySQL
+- SQLite

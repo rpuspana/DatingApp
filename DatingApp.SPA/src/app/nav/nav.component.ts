@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../_services/auth.service';
+import { AlertifyService } from '../_services/alertify.service';
 
 @Component({
   selector: 'app-nav',
@@ -9,30 +10,32 @@ import { AuthService } from '../_services/auth.service';
 export class NavComponent implements OnInit {
   model: any =  {};
 
-  constructor(private authService: AuthService) { }
+  constructor(private authService: AuthService,
+              private alertify: AlertifyService) { }
 
   ngOnInit() {
   }
 
   login() {
     this.authService.login(this.model).subscribe(data => {
-        console.log('logged in successfully');
-        console.log(this.model);
+        this.alertify.success('logged in successfully');
       }, error => {
         // get the direct response from the Observable when it encounter's an error condition
-        console.log(error);
+       this.alertify.error(error);
       });
   }
 
   logout() {
     this.authService.userToken = null;
+
     localStorage.removeItem('token');
-    console.log('logged out');
+
+    this.alertify.message('logged out');
   }
 
+  // check to see if a JWT token exists in localStorage and if it does, 
+  // see if it expired or not
   loggedIn() {
-    const token = localStorage.getItem('token');
-
-    return !!token;
+    return this.authService.loggedIn();
   }
 }
