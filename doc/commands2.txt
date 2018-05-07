@@ -1,0 +1,440 @@
+!!! Comenzi de windows din POWERSHELL !!!
+
+# remove the last migration: dotnet ef migrations  remove
+
+# when you reopen vscode - proiectul de WEB API
+For Windows
+	Command line - setx ASPNETCORE_ENVIRONMENT "Development"
+	OR 
+	PowerShell - $Env:ASPNETCORE_ENVIRONMENT = "Development"
+	
+Other OS
+https://stackoverflow.com/questions/41546943/how-to-set-aspnetcore-environment-to-be-considered-for-publishing-an-asp-net-cor
+
+If you want to set ASPNETCORE_ENVIRONMENT using web.config then add aspNetCore like this:
+<configuration>
+  <!--
+    Configure your application settings in appsettings.json. Learn more at http://go.microsoft.com/fwlink/?LinkId=786380
+  -->
+  <system.webServer>
+    <handlers>
+      <add name="aspNetCore" path="*" verb="*" modules="AspNetCoreModule" resourceType="Unspecified" />
+    </handlers>
+    <aspNetCore processPath=".\MyApplication.exe" arguments="" stdoutLogEnabled="false" stdoutLogFile=".\logs\stdout" forwardWindowsAuthToken="false">
+      <environmentVariables>
+        <environmentVariable name="ASPNETCORE_ENVIRONMENT" value="Development" />
+      </environmentVariables>
+    </aspNetCore>
+  </system.webServer>
+</configuration>
+
+
+# open the app - sa fii in root folder al proiectului
+$ dotnet run
+
+
+# CREATE NEW WEB API - sa fii in root folder al proiectului
+$ dotnet new webapi -o DatingAPP.API -n DatingApp.API
+
+
+https://github.com/aspnet/MetaPackages/blob/dev/src/Microsoft.AspNetCore/WebHost.cs
+
+# change in AppName.csproj - proiectul de web api
+$ dotnet restore
+
+ <ItemGroup>
+    ...
+    added new <DotNetCliToolReference Include="Microsoft.DotNet.Watcher.Tools" Version="2.0.0" />
+  </ItemGroup>
+
+
+# start dotnet watch - sa fii in root folder al proiectului
+$ dotnet watch run  
+
+=== START THE APP WITH IT'S TWO PROJECTS ===
+1. API project - $ dotnet watch run
+2. Angular project - $ ng serve --open
+
+
+=== ENTITY FRAMEWORK COMMANDS from powershell ===
+
+MIGRATION COMMAND
+# $ dotnet ef migrations add InitialCreate
+
+UNDO migration  $ dotnet ef migrations remove
+
+update the database $ dotnet ef database update
+
+
+=== ADD ANGULAR TO THE PROJECT ===
+
+1. iesi din folderul web api (esti in rootul proiectului)
+2. din root-ul proiectului dai creezi in proiect de Angular nou
+   $ ng new DatingApp.SPA
+   
+# start ANGULAR  $ ng serve
+
+
+=== Get data from the db to Angular ===
+
+1. appmodule.ts - add HttpModule in imports array and import HttpModule at the top of the file from '@angular/http'
+2. creezi o noua componenta in app/ , ex values
+3. in values.ts creezi o metoda care sa ia valorile din BD
+  // get values from the API
+  getValues() {
+    this.http.get('http://localhost:5000').subscribe(response => {
+      console.log(response);
+    });
+  }
+  
+4. chemi aceasta metoda in metoda ngInit();
+5. in app.component.html  stergi tot in afara de primul div
+6. dupa h1 pui <app-value></app-value>
+5. dai drumul aplicatiei
+
+
+=== Add a header to a response so that the browser loads a GET request ===
+=== caused by browser error (open console to see) No 'Access-Control-Allow-Origin' header is present on the requested resource ===
+1. Go to the API project
+2. Startup.cs - ConfigureServices() - add as last line services.AddCors();
+3. Startup.cs - Configure() - add ON TOP OF app.UserMvc() 
+	app.UseCors(x => x.AllowAnyHeader().AllowAnyMethod().AllowAnyOrigin().AllowCredentials());
+4. refresh browser
+5. trebuie sa vad in consola browserului tot ce am in baza si un response status de 200
+
+
+=== HOW CAN WE EXTRACT THE INFO FROM TEH BODY AS A JSON RESPONSE SO THAT WE CAN USE IN ANGULAR ===
+1. Angular proj - values.component.ts - rescrii metoda getValues()
+    // get values from the API
+  getValues() {
+    this.http.get('http://localhost:5000/api/values').subscribe(response => {
+      // console.log(response);
+      this.values = response.json();
+    });
+  }
+2. value.html component - replace content of it with
+     <p *ngFor="let value of values">{{value.id}} : {{value.name}}</p>
+	 
+
+=== INSTALL BOOTSTRAP AND A FONT ===
+1. open new terminal window
+2. go in the angular project
+2. npm install bootstrap font-awesome --save
+4. vezi dca apare bootstrap si font-awesome in package.json si in node_modules
+5. add to .angular-clijson - styles array - code below :
+	"../node_modules/bootstrap/dist/css/bootstrap.min.css", 
+	"../node_modules/font-awesome/css/font-awesome.min.css",
+6. restart service that is running the Angular app (CTRL + C , ng serve --open)
+7. go and use bootsrap and HTML
+
+
+=== Make the WEB API aware of a newly created module ===
+1. Tell ENTITY Framework about the model
+11. DataContext.cs - DataContext class
+12. public DbSet<ModelName>  TableName with s at the end { get; set; }
+2. Stop the API and enter in the api's folder
+3. Create a migration and push it to the database
+31. $ dotnet ef migrations add AddModelNameModel
+4. Check if the Models folder for two new files with your last created model's name on it
+5. run $ dotnet ef database update
+    
+
+=== Add a repository to implement the repositoty pattern ===
+I. Add the repository interface
+	1. Add an interface to the Data folder
+	2. Name it IWriteNameHere
+	3. Add method headers returning Task<dataDype> 
+	Eg : Task<bool> UserExists(string username);
+	
+II. Add the repository implementation
+	1. Add a class in the Data folder called WriteNameHere(corresponding to the IWriteNameHere interface)
+	2. inherit from IAuthRepository
+		Eg: public class AuthRepository : IAuthRepository
+	3. Implement all the methods in the interface
+	
+	
+=== Make the repository available for injection in other parts of the API ===
+1. Startup.cs - ConfigureServices()
+2. add simmilar looking code 
+	services.AddScoped<IAuthRepository, AuthRepository>();
+	
+	
+=== Using the repository in the API ===
+1. Create a controller, eg AuthController
+2. create DTO folder at the root of the API project
+3. Create the DTO = class . See the Dtos/UserForRegisterDto.cs
+4. See AuthController.cs file
+
+
+=== Debug WEB API ===
+1. pui un puct-ul de debug pe o funtie pe care vrei sa o testezi
+2. te asiguri ca proiectul de web api e pornit
+2. DAI PE TABUL DE DEBUG, 
+3. IN MENIUL DE SUS , selectezi din lista .Net COre Attach
+4. Dai click pe butonul verde de Play
+5. Select the process to add it to : ce cu DatingApp.API\bin\debug\...ceva.dll la sfarsit
+6. Postman
+	verb = http post
+	url http://localhost:5000/api/auth/register
+	body - select - raw option + JSON option in dropdown
+	body text =
+	 = {
+			"username": "John",
+			"password": "password"
+		
+		}
+7. Trebuie sa vezi ca a intrat debug-ul in vscode
+8. Dai F10 sau ce comezi ai nevoie si cand vezi ca iese din debug te uiti la Postman, jos in dreapta la Status
+
+
+=== Implementing JWT JSON Web Tokens ===
+1. Add another DTO UserForLoginDto in Dtos folder in project root
+namespace DatingAPP.API.Dtos
+{
+    public class UserForLoginDto
+    {
+         public string Username { get; set; }
+
+        public string Password { get; set; }
+    }
+}
+2. AuthController - create Login() method
+3. Generate token inside the login method
+--- code start
+var tokenHandle = new JwtSecurityTokenHandler();
+
+//super secret key =  key to sign the token encoded in bytes array
+// like 7A 61 2B 41 77 59 42 2F 51 4F 79 32 50 2F 63 2F 77 2D
+var key = System.Text.Encoding.ASCII.GetBytes("super secret key");
+
+// token payload = describe token and what is going to be inside it
+var tokenDescriptor = new SecurityTokenDescriptor
+{
+	Subject = new ClaimsIdentity(new Claim[]
+	{
+		new Claim(ClaimTypes.NameIdentifier, userFromRepo.Id.ToString()),
+		new Claim(ClaimTypes.Name, userFromRepo.Username)
+	}),
+	Expires = DateTime.Now.AddDays(1),
+
+	// token secret
+	SigningCredentials = 
+		new SigningCredentials(new SymmetricSecurityKey(key), 
+								SecurityAlgorithms.HmacSha512Signature)
+};
+
+// create a JWT token
+var token = tokenHandle.CreateToken(tokenDescriptor);
+
+// Serialization = process of converting an object into a stream of bytes
+//  in order to store the object or transmit it to memory, a database, or a file.
+//  Its main purpose is to save the state of an object 
+//  in order to be able to recreate it when needed.
+// The reverse process is called deserialization.
+
+// serialize the token
+var tokenString = tokenHandle.WriteToken(token);
+
+// pass token to the client
+return Ok(new {tokenString});
+--- code end
+
+5. test if it's ok with Postman app(google it and install it)
+http verb : post
+link: http://localhost:5000/api/auth/login
+body: 
+	raw option + json(application json)
+	content in 1st form :  { "username": "bob", "password": "password" }
+click the SEND button
+response body :
+	{
+    "tokenString": "eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwidW5pcXVlX25hbWUiOiJib2IiLCJuYmYiOjE1MjQ4MjMwOTAsImV4cCI6MTUyNDkwOTQ5MCwiaWF0IjoxNTI0ODIzMDkwfQ.7oEbuRqGt1bJ6aGOY5zS_9ZtYKb4GHO8r_cWOKq4dWpnsM95aE9okVo_oQT1dNE7jc6aq4ek7GVVrM4pNZXCkg"
+	}
+	
+6. paste the tokenString value( without ") in https://jwt.io/ - Debugger - Encoded section
+eyJhbGciOiJIUzUxMiIsInR5cCI6IkpXVCJ9.eyJuYW1laWQiOiIzIiwidW5pcXVlX25hbWUiOiJib2IiLCJuYmYiOjE1MjQ4MjMwOTAsImV4cCI6MTUyNDkwOTQ5MCwiaWF0IjoxNTI0ODIzMDkwfQ.7oEbuRqGt1bJ6aGOY5zS_9ZtYKb4GHO8r_cWOKq4dWpnsM95aE9okVo_oQT1dNE7jc6aq4ek7GVVrM4pNZXCkg
+
+7. See if Decoded section info is ok, and validate signature (below the decoding section) with the secrey key that you set up
+
+
+=== Angular - Parent-child communication using input properties ===
+1. Father component:
+     inside fatherComonent.html file you have this code <app-register [valuesFromHome]="values"></app-register>
+	
+	 inside fatherComonent.ts
+	 // get values from the API
+	 getValues() {
+		this.http.get('http://localhost:5000/api/values').subscribe(response => {
+		  // console.log(response);
+		  this.values = response.json();
+		});
+	 }
+  
+2. Child component:
+	<option *ngFor="let value of valuesFromHome" [value]="value">{{ value.name }}</option>
+	
+	// input property
+	@Input() valuesFromHome: any;
+
+
+=== Angular - Child -Parent communication using output properties ===
+1. Child component:
+
+	- angular ts file
+	// input property
+	@Output() cancelRegister = new EventEmitter();
+	
+	 // pass the value to the parent
+    // register mode = false
+    this.cancelRegister.emit(false);
+	
+2. Father component 
+
+	- html file
+	
+      <!-- child component -->
+      <!-- cancelRegister emits an event $event which is the value passed from the child component, in our case false -->
+      <app-register [valuesFromHome]="values" (cancelRegister)="cancelRegisterMode($event)"></app-register>
+	  
+	- ts file
+	
+	cancelRegisterMode(registerMode: boolean) {
+		this.registerMode = registerMode;
+	}
+	
+	
+=== Error Handling in API project ===
+
+I pass error message in the response's body
+
+1. close the server ctrl + C
+
+2. Startup.cs of WEB API project
+ if (env.IsDevelopment())
+{
+	// handle exceptions globally
+	app.UseDeveloperExceptionPage();
+}
+else
+{
+	// global exception handler
+	// return just the response error code
+	// app.UseExceptionHandler();
+
+	app.UseExceptionHandler(builder => {
+		builder.Run(async context => {
+			// I have access to the http context
+
+			context.Response.StatusCode = (int)HttpStatusCode.InternalServerError;
+
+			// pass the error to the exception handlers and get it
+			var error = context.Features.Get<IExceptionHandlerFeature>();
+
+			if(error != null)
+			{
+				// write error message in the response
+				await context.Response.WriteAsync(error.Error.Message);
+			}
+		});
+	});
+}
+2. in the API project make sure you are in Production mode:
+For Windows
+	Command line - setx ASPNETCORE_ENVIRONMENT "Production"
+	OR 
+	PowerShell - $Env:ASPNETCORE_ENVIRONMENT = "Production"
+	
+Other OS
+https://stackoverflow.com/questions/41546943/how-to-set-aspnetcore-environment-to-be-considered-for-publishing-an-asp-net-cor
+
+3.restart the server dotnet watch run
+
+II. Pass message in the response header
+1. Create Helpers (general purpose folder to assist the app in some way) folder in the WEB API projct root
+2. Add Extensions.cs class in this folder
+3. Add this colde to it
+using Microsoft.AspNetCore.Http;
+
+namespace DatingAPP.API.Helpers
+{
+    // general purpose class
+    public static class Extensions
+    {
+        public static void AddApplicationError(this HttpResponse response, string message)
+        {
+            // heaser 1
+            // message = exception message
+            response.Headers.Add("ApplicationError", message);
+
+             // make the header above available to the browser
+             // the value of the header above(ApplicationError)
+             response.Headers.Add("Access-Control-Expose-Headers", "ApplicationError");
+
+             // any origin is allowed to access this particular header
+             response.Headers.Add("Access-Control-Allow-Origin", "*");
+        }
+    }
+}
+4. Add this class to the Startup.cs class of the Web API project
+	In the Configure method add the error code to the response header in the else clause of the first if statement.
+	
+	  // write the error message in the response's header
+      context.Response.AddApplicationError(error.Error.Message);
+	  
+	  
+=== Error Handling in SPA client project ===
+1. auth service in the SPA
+ // handle server errors(status code 500) and client errors(status code 400)
+    private handleError(error: any) {
+        // message returned by the server
+        const applicationError = error.headers.get('Application-Error');
+
+        // server error
+        if (applicationError) {
+            return Observable.throw(applicationError);
+        }
+
+        // target the ModelState errors
+        // extract the errors from the body of the request
+        const serverError = error.json();
+
+        let modelStateErrors = '';
+
+        if (serverError) {
+            // loop through the keys in the response's body
+            for (const key in serverError) {
+                if (serverError[key]) {
+                    modelStateErrors += serverError[key] + '\n';
+                }
+            }
+        }
+
+        return Observable.throw(
+            // if there are errors in the body, return them, or return 'Server error'
+            modelStateErrors || 'Server error.'
+        );
+    }
+	
+2.  .catch(this.handleError) at the end of the statements that call the API methods
+	Eg:
+	
+	// calls the login method in the API
+    login(model: any) {
+
+        // issue a request
+        // model = body of request = username and password from the user
+        // because I am sending a post I need to tell the API what
+        // type of content (angular/json in my case) I am sending out.
+        // map()
+        //  - RXJS function
+        //  - is used for transforming the servers's response into something else
+        return this.http.post(this.baseUrl + 'login', model, this.requestOptinos()).map(
+            (response: Response) => {
+                const user = response.json();
+                if (user) {
+                    localStorage.setItem('token', user.tokenString);
+                    this.userToken = user.tokenString;
+                }
+            }).catch(this.handleError);
+    }
+	
