@@ -437,4 +437,55 @@ namespace DatingAPP.API.Helpers
                 }
             }).catch(this.handleError);
     }
+
+
+===Set up Angular ROUTER====
+1. create router.ts file in the root of SPA - app folder
+2. app.module.ts - imports
+3. add RouterModule.forRoot(appRoutes)
+44. router.ts - add routes 
+	// this is a routing configuration
+// The Angular Router applys a match-first strategy and returns the component
+export const appRoutes: Routes = [
+    // home route
+    {path: 'home', component: HomeComponent},
+
+    // members route
+    {path: 'members', component: MemberListComponent},
+
+    // messages route
+    {path: 'messages', component: MessagesComponent},
+
+    // lists route
+    {path: 'lists', component: ListsComponent},
+
+    // this type of route must be placed last in the array
+    // because it matches any full URL, ex, localhost:1234/asdf
+    {path: '**', redirectTo: 'home', pathMatch: 'full'}
+];
+
+
+
+===Use Angular ROUTER====
+1. Use the routes you just set up in a html file.
+   Replace <a href="#">Matches</a> with with <a [routerLink]="['/members']" routerLinkActive="router-link-active">Matches</a> 
+2. SPA - app.component.html - repalce <app-home></app-home> with <router-outlet></router-outlet>
+
+3. the router can be used as a service
+   add to the constructor of a component private router: Router
+
+   4. to nagivate to a page use this:
+	this.router.navigate(['/members']);
 	
+===Angualr guards===
+command to generate a guard:
+- angular cli > spa project > ng g guard guardName (--spec=false to not generate a test file)
+- once the file is created move it to a _guards folder in SPA/src/app folder
+- paste the code from the file in that folder
+- add the route guard class AuthGuard to app.module as a provider (to the providers array)
+
+* Guard just one route
+- add property canActivate: [AuthGuard] to a route you want to guard from users who are not logged in
+  Eg {path: 'members', component: MemberListComponent, canActivate: [AuthGuard]}
+  
+** Guard multiple routes

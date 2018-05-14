@@ -7,14 +7,14 @@
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="#">Dating App</a>
+      <a class="navbar-brand" [routerLink]="['/home']">Dating App</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
 
       <ul class="nav navbar-nav" *ngIf="loggedIn()">
-        <li><a href="#">Matches</a></li>
-        <li><a href="#">Lists</a></li>
-        <li><a href="#">Messages</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/members']">Matches</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/lists']">Lists</a></li>
+        <li routerLinkActive="active"><a [routerLink]="['/messages']">Messages</a></li>
       </ul>
 
        <!-- show this form if the user is not logged in and-->
@@ -36,7 +36,7 @@
       <ul *ngIf="loggedIn()" class="nav navbar-nav navbar-right">
 
         <li class="dropdown" dropdown>
-          <a href="#" class="dropdown-toggle" dropdownToggle>
+          <a (click)="false" class="dropdown-toggle" dropdownToggle>
              <!-- if unique_name is not there when the page loads it si not a problem -->
              <!-- titlecase = angular pipe = function -->
               Welcome {{authService.decodedToken?.unique_name | titlecase}} <span class="carret"></span></a>
