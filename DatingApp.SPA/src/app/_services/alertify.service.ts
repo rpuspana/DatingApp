@@ -12,7 +12,7 @@ export class AlertifyService {
 
     constructor() { }
 
-    // add methods that we will user from the alertify library
+    // add methods that we will use from the alertify library
     // () => any = annonymous function called after the confirmed dialog has been confirmed
     confirm(message: string, okCallback: () => any) {
         alertify.confirm(message, function(e) {

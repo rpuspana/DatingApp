@@ -90,7 +90,7 @@ export class AuthService {
 
         return Observable.throw(
             // if there are errors in the body, return them, or return 'Server error'
-            modelStateErrors || 'Server error.'
+            modelStateErrors || 'Server error'
         );
     }
 }

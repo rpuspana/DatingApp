@@ -33,7 +33,7 @@ export class NavComponent implements OnInit {
     this.alertify.message('logged out');
   }
 
-  // check to see if a JWT token exists in localStorage and if it does, 
+  // check to see if a JWT token exists in localStorage and if it does,
   // see if it expired or not
   loggedIn() {
     return this.authService.loggedIn();

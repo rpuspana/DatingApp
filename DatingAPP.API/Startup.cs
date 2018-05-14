@@ -17,7 +17,6 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-using DatingAPP.API.Helpers;
 
 namespace DatingApp.API
 {
@@ -69,6 +68,7 @@ namespace DatingApp.API
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
+            // error handler on the API side
             if (env.IsDevelopment())
             {
                 // handle exceptions globally

@@ -1,7 +1,7 @@
 ## Description
-Dating app in ASP.Net Core 2 and Angular 5
+Dating app in ASP.Net Core 2 (Web API + MVC frameworks), Angular 5, MySQL.
 
-App currently in development
+App currently in development.
 
 
 ## Project features
@@ -15,11 +15,12 @@ App currently in development
 - Microsoft Entity Framework 2
 
 - Angular 5
-- HTML CSS BootsrapJS
+- HTML, CSS, Bootsrap 3
 
-- AlertifyJS (for styling handled errors) http://alertifyjs.com
-- angular-jwt (library for managing JWTs) https://github.com/auth0/angular2-jwt
-- ngx-bootstrap (integrate Bootstrap 3 - which I will use, or Bootstrap 4 components with Angular) https://valor-software.com/ngx-bootstrap/#/getting-started
+- AlertifyJS (for styling app notifications) http://alertifyjs.com
+- Angular JWT (library for managing JWTs inside Angular) https://github.com/auth0/angular2-jwt
+- NGX Bootstrap (integrate Bootstrap components with Angular) https://valor-software.com/ngx-bootstrap/#/getting-started
+- Bootswatch (Bootstrap themes) https://bootswatch.com - theme chosen for this app was United theme
 
 - MySQL
 - SQLite
