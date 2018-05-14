@@ -8,6 +8,7 @@ App currently in development.
 - Cross platform functionality
 - User authentication with JWT token
 - server and client error handling
+- multiple route protection at once
 
 
 ## Tech used
