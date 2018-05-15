@@ -15,16 +15,28 @@ export const appRoutes: Routes = [
     // home route
     {path: 'home', component: HomeComponent},
 
-    // members route
-    // when a use wants to access this area, it will call AuthGuard.canActivate()
-    // if is satisfy the conditions there, the area will be shown
-    {path: 'members', component: MemberListComponent, canActivate: [AuthGuard]},
+    // dummy route - in the scope of protecting multiple routes at once
+    {
+        path: '',
+        runGuardsAndResolvers: 'always',
 
-    // messages route
-    {path: 'messages', component: MessagesComponent},
+        // when a use wants to access this rotue or it's child routes, it will call AuthGuard.canActivate()
+        // if is satisfy the conditions there, tihs area or a child area will be shown
+        canActivate: [AuthGuard],
+        children: [
+            // child route that inherits all of the properties of the parent route ''
+            // members route - full url is http://localhost:8080/('' + members)
+            {path: 'members', component: MemberListComponent},
 
-    // lists route
-    {path: 'lists', component: ListsComponent},
+            // child route that inherits all of the properties of the parent route ''
+            // messages route - full url is http://localhost:8080/('' + messages)
+            {path: 'messages', component: MessagesComponent},
+
+            // child route that inherits all of the properties of the parent route ''
+            // lists route - http://localhost:8080/('' + lists)
+            {path: 'lists', component: ListsComponent},
+        ]
+    },
 
     // this type of route must be placed last in the array
     // because it matches any full URL, ex, localhost:1234/asdf
