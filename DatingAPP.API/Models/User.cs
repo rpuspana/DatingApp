@@ -29,12 +29,13 @@ namespace DatingAPP.API.Models
 
         public string Country {get; set;}
 
+        // 1 - * relationship
+        // 1 user can have many photos
         public ICollection<Photo> Photos {get; set;}
 
         public User() 
         {
             Photos = new Collection<Photo>();
         }
-        
     }
 }

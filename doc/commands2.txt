@@ -61,9 +61,11 @@ $ dotnet watch run
 MIGRATION COMMAND
 # $ dotnet ef migrations add InitialCreate
 
-UNDO migration  $ dotnet ef migrations remove
+remove last migration  $ dotnet ef migrations remove
 
-update the database $ dotnet ef database update
+update the database with the last added migration  $ dotnet ef database update
+
+get help   $ dotnet ef migrations
 
 
 === ADD ANGULAR TO THE PROJECT ===
